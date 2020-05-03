@@ -1,0 +1,6 @@
+{
+  "domain": "dev-instagram-react.auth0.com",
+  "clientId": "heixZImgsE3buiEtcFx7Sr9BQjPqEl0L",
+  "redirect_uri": "http://localhost:3000",
+  "audience": "https://instagram-graphql-react.herokuapp.com"
+}
