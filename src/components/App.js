@@ -8,6 +8,7 @@ import { Switch, Route } from "react-router-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
 import { setContext } from "apollo-link-context";
+import Feed from "./Feed";
 
 function App() {
 
@@ -64,6 +65,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Header />
+      <Switch>
+        <Route exact path="/" component={ Feed } />
+      </Switch>
     </ApolloProvider>
   );
 }
