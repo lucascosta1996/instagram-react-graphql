@@ -8,11 +8,13 @@ const FETCH_LIKES = gql`
   query($id: Int!, $userId: String!) {
     Post(where: { id: { _eq: $id } }) {
       Likes_aggregate {
-        count
+        aggregate {
+          count
+        }
       }
-    }
-    Likes(where: { user_id: { _eq: $userId } }) {
-      id
+      Likes(where: { user_id: { _eq: $userId } }) {
+        id
+      }
     }
   }
 `;
@@ -37,17 +39,18 @@ const DELETE_LIKE = gql`
 
 function Like(props) {
   const { isAuthenticated, user } = useAuth0();
-  const [ liked, setLiked ] = useState( false );
-  const [ countLikes, setCountLikes ] = useState( -1 );
-  const userId = useRef( null );
 
-  if ( isAuthenticated ) {
-    userId.current = user.sub
+  const [liked, setLiked] = useState(false);
+  const [countLikes, setCountLikes] = useState(-1);
+  const userId = useRef(null);
+
+  if (isAuthenticated) {
+    userId.current = user.sub;
   } else {
-    userId.current = 'none';
+    userId.current = "none";
   }
 
-  const [likePost] = useMutation( LIKE_POST, {
+  const [likePost] = useMutation(LIKE_POST, {
     variables: { postId: props.postId, userId: userId.current },
     refetchQueries: [
       {
@@ -55,9 +58,9 @@ function Like(props) {
         variables: { id: props.postId, userId: userId.current }
       }
     ]
-  } );
+  });
 
-  const [deleteLike] = useMutation( DELETE_LIKE, {
+  const [deleteLike] = useMutation(DELETE_LIKE, {
     variables: { postId: props.postId, userId: userId.current },
     refetchQueries: [
       {
@@ -65,7 +68,7 @@ function Like(props) {
         variables: { id: props.postId, userId: userId.current }
       }
     ]
-  } );
+  });
 
   const { loading, error, data } = useQuery(FETCH_LIKES, {
     variables: { id: props.postId, userId: userId.current }
@@ -74,13 +77,13 @@ function Like(props) {
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
-  if ( countLikes === -1 ) {
-    if ( data.Post[0].likes.length > 0 ) {
-      setLiked( true );
+  if (countLikes === -1) {
+    if (data.Post[0].Likes.length > 0) {
+      setLiked(true);
     }
-  }
 
-  setCountLikes( data.Post[0].Likes_aggregate.aggregate.count );
+    setCountLikes(data.Post[0].Likes_aggregate.aggregate.count);
+  }
 
   return (
     <div className="post-like-container">
