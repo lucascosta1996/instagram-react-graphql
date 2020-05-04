@@ -36,7 +36,7 @@ function App() {
   getAccessToken();
 
   const httpLink = new HttpLink({
-    uri: "https://instagram-clone-3.herokuapp.com/v1/graphql"
+    uri: "https://instagram-graphql-react.herokuapp.com/v1/graphql"
   });
 
   const authLink = setContext((_, { headers }) => {
