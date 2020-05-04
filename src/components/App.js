@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import "../styles/App.css";
-import Header from "./Header.js";
-import { useAuth0 } from "../auth/react-auth";
-import { Switch, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import '../styles/App.css';
+import Header from './Header.js';
+import { useAuth0 } from '../auth/react-auth';
+import { Switch, Route } from 'react-router-dom';
+import Feed from './Feed';
+import Profile from './Profile';
+import Post from './Post';
+import SecuredRoute from './SecuredRoute';
 
 // for apollo client
-import { ApolloProvider } from "@apollo/react-hooks";
-import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
-import { setContext } from "apollo-link-context";
-import Feed from "./Feed";
+import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-boost';
+import { setContext } from 'apollo-link-context';
 
 function App() {
 
@@ -20,7 +23,7 @@ function App() {
 
   const { getTokenSilently, loading } = useAuth0();
   if (loading) {
-    return "Loading...";
+    return 'Loading...';
   }
 
   // get access token
@@ -36,7 +39,7 @@ function App() {
   getAccessToken();
 
   const httpLink = new HttpLink({
-    uri: "https://instagram-graphql-react.herokuapp.com/v1/graphql"
+    uri: 'https://instagram-graphql-react.herokuapp.com/v1/graphql'
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -66,7 +69,9 @@ function App() {
     <ApolloProvider client={client}>
       <Header />
       <Switch>
-        <Route exact path="/" component={ Feed } />
+        <Route exact path="/" component={Feed} />
+        <Route path={"/post/:id"} component={ Post } />
+        <SecuredRoute path={"/user/:id"} component={ Profile } />
       </Switch>
     </ApolloProvider>
   );
